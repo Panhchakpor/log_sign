@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login</title>
+
+    <link rel="stylesheet" href="login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+
+<body>
+
+<div id="particles-js"></div>
+
+<div class="content-container">
+    <div class="login-box">
+        <h2>Login</h2>
+
+        <form id="loginForm">
+
+            <div class="input-group">
+                <i class="fa fa-envelope"></i>
+                <input id="email" type="email" placeholder="Email" required>
+            </div>
+
+            <div class="input-group">
+                <i class="fa fa-lock"></i>
+                <input id="password" type="password" placeholder="Password" required>
+            </div>
+
+            <button type="submit">Login</button>
+        </form>
+
+        <a href="signup.html">Don't have an account? Sign Up</a>
+    </div>
+</div>
+
+<script>
+/* Particles Background */
+particlesJS('particles-js', {
+    "particles": {
+        "number": { "value": 100, "density": { "enable": true, "value_area": 800 }},
+        "color": { "value": "#FFFFFF" },
+        "opacity": { "value": 0.9, "random": true },
+        "size": { "value": 4, "random": true },
+        "line_linked": {
+            "enable": true,
+            "color": "#C00000",
+            "opacity": 0.4,
+            "distance": 150,
+            "width": 1
+        },
+        "move": { "enable": true, "speed": 1.5 }
+    }
+});
+
+/* LOGIN LOGIC */
+
+document.getElementById("loginForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const email = this.email.value;
+    const password = this.password.value;
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    const found = users.find(u => u.email === email && u.password === password);
+
+    if (found) {
+
+        // Save last login timestamp
+        found.lastActive = new Date().toLocaleString();
+
+        // Update users list
+        const updatedUsers = users.map(u =>
+            u.email === found.email ? found : u
+        );
+        localStorage.setItem("users", JSON.stringify(updatedUsers));
+
+        // Save current logged user
+        localStorage.setItem("currentUser", JSON.stringify(found));
+
+        alert("Login successful!");
+        window.location.href = "dashboard.html";
+
+    } else {
+        alert("Incorrect email or password!");
+    }
+});
+
+</script>
+
+</body>
+</html>

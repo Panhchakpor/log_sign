@@ -1,0 +1,239 @@
+/* General layout */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+/* Particle background */
+#particles-js {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background-color: #1a1a2e;
+    background-image: linear-gradient(135deg, #1a1a2e 0%, #0f0f1a 100%);
+}
+
+/* Center container */
+.content-container {
+    display: flex;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Signup Box */
+.signup-box {
+    width: 330px;
+    padding: 30px;
+    background: rgba(0,0,0,0.65);
+    border-radius: 15px;
+    color: #fff;
+    text-align: center;
+    box-shadow: 0 0 25px rgba(0, 200, 255, 0.5);
+}
+
+.signup-box h2 {
+    margin-bottom: 20px;
+}
+
+/* Input groups */
+.input-group {
+    display: flex;
+    align-items: center;
+    background: rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 15px;
+}
+
+.input-group i {
+    margin-right: 10px;
+    color: #00c8ff;
+}
+
+.input-group input {
+    width: 100%;
+    color: white;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+/* Button */
+button {
+    width: 100%;
+    padding: 12px;
+    background: #00c8ff;
+    border: none;
+    border-radius: 8px;
+    color: #000;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+button:hover {
+    background: #90ffff;
+}
+
+/* Link */
+a {
+    color: #00c8ff;
+    text-decoration: none;
+    margin-top: 10px;
+    display: inline-block;
+}
+
+/* Social */
+.social-login p {
+    margin-top: 20px;
+    color: #90ffff;
+}
+
+.social-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-top: 10px;
+}
+
+.social-btn {
+    font-size: 28px;
+    color: white;
+    transition: transform 0.3s ease;
+}
+
+.social-btn:hover {
+    transform: scale(1.2);
+}
+
+.google { color: #DB4437; }
+.twitter { color: #1DA1F2; }
+.facebook { color: #1877F2; }
+
+/* ===== RESPONSIVE STYLES ===== */
+
+/* Tablet - Medium screens */
+@media screen and (max-width: 768px) {
+    .signup-box {
+        width: 90%;
+        max-width: 380px;
+        padding: 25px 20px;
+        margin: 20px;
+    }
+
+    .signup-box h2 {
+        font-size: 1.5rem;
+    }
+
+    .input-group {
+        padding: 10px 12px;
+    }
+
+    .input-group input {
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    button {
+        padding: 14px;
+        font-size: 1rem;
+    }
+
+    .social-buttons {
+        gap: 20px;
+    }
+
+    .social-btn {
+        font-size: 24px;
+    }
+}
+
+/* Mobile - Small screens */
+@media screen and (max-width: 480px) {
+    .content-container {
+        padding: 15px;
+        min-height: 100vh;
+        box-sizing: border-box;
+    }
+
+    .signup-box {
+        width: 100%;
+        max-width: 100%;
+        padding: 20px 15px;
+        margin: 10px;
+        border-radius: 12px;
+        box-shadow: 0 0 15px rgba(0, 200, 255, 0.4);
+    }
+
+    .signup-box h2 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+    }
+
+    label {
+        font-size: 0.9rem;
+    }
+
+    .input-group {
+        padding: 12px;
+        margin-bottom: 12px;
+        border-radius: 10px;
+    }
+
+    .input-group i {
+        font-size: 14px;
+        margin-right: 8px;
+    }
+
+    .input-group input {
+        font-size: 16px;
+    }
+
+    button {
+        padding: 15px;
+        font-size: 1rem;
+        border-radius: 10px;
+    }
+
+    a {
+        font-size: 0.9rem;
+        margin-top: 15px;
+    }
+
+    .social-login p {
+        font-size: 0.85rem;
+        margin-top: 15px;
+    }
+
+    .social-buttons {
+        gap: 25px;
+        margin-top: 8px;
+    }
+
+    .social-btn {
+        font-size: 26px;
+        padding: 8px;
+    }
+}
+
+/* Extra small screens */
+@media screen and (max-width: 320px) {
+    .signup-box {
+        padding: 15px 10px;
+    }
+
+    .signup-box h2 {
+        font-size: 1.2rem;
+    }
+
+    .social-buttons {
+        gap: 15px;
+    }
+
+    .social-btn {
+        font-size: 22px;
+    }
+}

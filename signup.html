@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - Neural Net</title>
+
+    <link rel="stylesheet" href="signup.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+</head>
+
+<body>
+
+<div id="particles-js"></div>
+
+<div class="content-container">
+    <div class="signup-box">
+        <h2>Create Account</h2>
+
+        <form id="signupForm">
+
+            <label>Username</label>
+            <div class="input-group">
+                <i class="fa fa-user"></i>
+                <input type="text" name="username" required>
+            </div>
+
+            <label>Email</label>
+            <div class="input-group">
+                <i class="fa fa-envelope"></i>
+                <input type="email" name="email" required>
+            </div>
+
+            <label>Password</label>
+            <div class="input-group">
+                <i class="fa fa-lock"></i>
+                <input type="password" name="password" required>
+            </div>
+
+            <button type="submit">Sign Up</button>
+        </form>
+
+        <a href="index.html">Already have an account? Login</a>
+
+        <div class="social-login">
+            <p>Or sign up with</p>
+            <div class="social-buttons">
+                <a href="#" class="social-btn google"><i class="fab fa-google"></i></a>
+                <a href="#" class="social-btn twitter"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-btn facebook"><i class="fab fa-facebook-f"></i></a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+/* Particles */
+particlesJS('particles-js', {
+    "particles": {
+        "number": { "value": 80, "density": { "enable": true, "value_area": 800 }},
+        "color": { "value": "#00c8ff" },
+        "opacity": { "value": 0.5 },
+        "size": { "value": 3, "random": true },
+        "line_linked": {
+            "enable": true,
+            "color": "#00c8ff",
+            "opacity": 0.4,
+            "distance": 150
+        },
+        "move": { "enable": true, "speed": 2 }
+    }
+});
+
+/* SIGNUP LOGIC */
+document.getElementById("signupForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const user = {
+        username: this.username.value,
+        email: this.email.value,
+        password: this.password.value
+    };
+
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+
+    if (users.some(u => u.email === user.email)) {
+        alert("Email already exists!");
+        return;
+    }
+
+    users.push(user);
+    localStorage.setItem("users", JSON.stringify(users));
+
+    alert("Account created successfully!");
+    window.location.href = "index.html";
+});
+</script>
+
+</body>
+</html>

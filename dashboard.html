@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard — Neural Net</title>
+
+  <link rel="stylesheet" href="dashboard.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <script defer>
+  window.addEventListener("DOMContentLoaded", () => {
+
+    /* Toast */
+    const toastBox = document.createElement("div");
+    toastBox.className = "toast";
+    document.body.appendChild(toastBox);
+
+    const toast = msg => {
+      toastBox.textContent = msg;
+      toastBox.classList.add("show");
+      setTimeout(() => toastBox.classList.remove("show"), 2000);
+    };
+
+    /* Load user */
+    const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+    if (!currentUser) return location.href = "login.html";
+
+    /* Elements */
+    const userEl = document.getElementById("usernameDisplay");
+    const emailEl = document.getElementById("emailDisplayLarge");
+    const lastEl = document.getElementById("lastLoginDisplay");
+    const avatarEl = document.getElementById("avatarInitials");
+    const countEl = document.getElementById("loginCount");
+
+    /* Typing effect */
+    const typeText = (el, text, speed = 45) => {
+      el.textContent = "";
+      let i = 0;
+      const loop = setInterval(() => {
+        el.textContent += text[i];
+        i++;
+        if (i >= text.length) clearInterval(loop);
+      }, speed);
+    };
+
+    typeText(userEl, "Hello, " + currentUser.username + "!");
+    emailEl.textContent = currentUser.email;
+    lastEl.textContent = currentUser.lastActive || "First login";
+    countEl.textContent = currentUser.loginCount || 1;
+    avatarEl.textContent = currentUser.username[0].toUpperCase();
+
+    /* Open modals */
+    const open = id => document.getElementById(id).classList.add("open");
+    const close = id => document.getElementById(id).classList.remove("open");
+    window.closeModal = close;
+
+    document.getElementById("profileBtnSidebar").onclick = () => {
+      profileUsername.value = currentUser.username;
+      profileEmail.value = currentUser.email;
+      open("profileModal");
+    };
+
+    document.getElementById("settingsBtn").onclick = () => {
+      themeSelect.value = localStorage.getItem("uiTheme") || "pastel";
+      open("settingsModal");
+    };
+
+    /* Logout confirmation */
+    logoutBtn.onclick = logoutBtn2.onclick = () => open("confirmLogout");
+    confirmLogoutYes.onclick = () => {
+      localStorage.removeItem("currentUser");
+      location.href = "login.html";
+    };
+
+    /* Save Profile */
+    saveProfileBtn.onclick = () => {
+      let name = profileUsername.value.trim();
+      let email = profileEmail.value.trim();
+      if (!name || !email) return toast("Fields cannot be empty!");
+
+      currentUser.username = name;
+      currentUser.email = email;
+
+      localStorage.setItem("currentUser", JSON.stringify(currentUser));
+      avatarEl.textContent = name[0].toUpperCase();
+      typeText(userEl, "Hello, " + name + "!");
+      emailEl.textContent = email;
+
+      toast("Profile updated!");
+      close("profileModal");
+    };
+
+    /* Theme control */
+    themeSelect.onchange = e => {
+      document.documentElement.setAttribute("data-theme", e.target.value);
+      localStorage.setItem("uiTheme", e.target.value);
+      toast("Theme applied!");
+    };
+
+    /* Hover preview */
+    themeSelect.onmouseover = e => {
+      if (e.target.tagName === "OPTION") {
+        document.documentElement.setAttribute("data-theme", e.target.value);
+      }
+    };
+
+    /* Click outside modal */
+    document.querySelectorAll(".modal").forEach(m =>
+      m.addEventListener("click", e => {
+        if (e.target === m) close(m.id);
+      })
+    );
+
+    /* Apply saved theme */
+    document.documentElement.setAttribute(
+      "data-theme",
+      localStorage.getItem("uiTheme") || "pastel"
+    );
+  });
+  </script>
+</head>
+
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="avatar" id="avatarInitials"></div>
+        <div class="brand-text">
+          <div class="brand-title">Welcome</div>
+          <div class="brand-sub">your info</div>
+        </div>
+      </div>
+
+      <nav class="nav">
+        <button class="nav-btn active">Dashboard</button>
+        <button class="nav-btn" id="profileBtnSidebar">Profile</button>
+        <button class="nav-btn" id="settingsBtn">Settings</button>
+      </nav>
+
+      <button class="ghost" id="logoutBtn">Logout</button>
+    </aside>
+
+    <main class="main">
+      <header class="main-header">
+        <h1 id="usernameDisplay"></h1>
+      </header>
+
+      <section class="card big-card">
+        <h2>Account Overview</h2>
+
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="label">Email</div>
+            <div class="value" id="emailDisplayLarge"></div>
+          </div>
+
+          <div class="info-item">
+            <div class="label">Last Login</div>
+            <div class="value" id="lastLoginDisplay"></div>
+          </div>
+
+          <div class="info-item">
+            <div class="label">Status</div>
+            <div class="value status">Active</div>
+          </div>
+
+          <div class="info-item">
+            <div class="label">Total Logins</div>
+            <div class="value" id="loginCount"></div>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="primary" id="logoutBtn2">Logout</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- PROFILE MODAL -->
+  <div id="profileModal" class="modal">
+    <div class="modal-panel">
+      <h3>Edit Profile</h3>
+
+      <label>Username</label>
+      <input id="profileUsername" type="text">
+
+      <label>Email</label>
+      <input id="profileEmail" type="email">
+
+      <h4 style="margin-top:20px;">Change Password</h4>
+
+      <label>Current Password</label>
+      <input id="oldPassword" type="password">
+
+      <label>New Password</label>
+      <input id="newPassword" type="password">
+
+      <div class="modal-actions">
+        <button class="primary" id="saveProfileBtn">Save</button>
+        <button class="ghost" onclick="closeModal('profileModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETTINGS MODAL -->
+  <div id="settingsModal" class="modal">
+    <div class="modal-panel">
+      <h3>Settings</h3>
+
+      <label>Theme</label>
+      <select id="themeSelect">
+        <option value="pastel">Pastel</option>
+        <option value="light">Light</option>
+        <option value="cute">Cute</option>
+        <option value="dark">Dark Mode 🌙</option>
+      </select>
+
+      <div class="modal-actions">
+        <button class="primary" onclick="closeModal('settingsModal')">Done</button>
+        <button class="ghost" onclick="closeModal('settingsModal')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOGOUT CONFIRMATION -->
+  <div id="confirmLogout" class="modal">
+    <div class="modal-panel">
+      <h3>Confirm Logout</h3>
+      <p>Are you sure you want to logout?</p>
+
+      <div class="modal-actions">
+        <button id="confirmLogoutYes" class="primary">Logout</button>
+        <button class="ghost" onclick="closeModal('confirmLogout')">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
