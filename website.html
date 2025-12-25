@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Crystal Book World</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Arial', sans-serif; }
+body, html { height:100%; overflow:hidden; background:#1a0a2a; cursor:none; }
+
+/* ===== Welcome Page ===== */
+#welcome-page {
+    position: relative;
+    width:100%;
+    height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    text-align:center;
+    background:linear-gradient(135deg, #4b0f76, #6b2c91, #ff5e8e);
+    background-size:400% 400%;
+    animation:gradientShift 20s ease infinite;
+    transition:opacity 1s;
+    overflow:hidden;
+}
+
+@keyframes gradientShift {
+    0% { background-position:0% 50%; }
+    50% { background-position:100% 50%; }
+    100% { background-position:0% 50%; }
+}
+
+#welcome-page h1 {
+    font-size:3rem;
+    margin-bottom:30px;
+    text-shadow:0 0 25px rgba(255,255,255,0.8);
+    animation:floatTitle 4s ease-in-out infinite alternate;
+}
+
+@keyframes floatTitle {
+    0% { transform: translateY(0px); }
+    100% { transform: translateY(-15px); }
+}
+
+#start-btn {
+    padding:18px 45px;
+    font-size:1.4rem;
+    border:none;
+    border-radius:20px;
+    background:linear-gradient(45deg,#ff5e8e,#ffb6b9);
+    color:white;
+    cursor:pointer;
+    box-shadow:0 0 25px rgba(255,94,142,0.8);
+    transition: transform 0.3s, box-shadow 0.3s;
+    z-index:10;
+}
+#start-btn:hover { transform:scale(1.2); box-shadow:0 0 40px rgba(255,94,142,1); }
+
+.crystal, .book, .particle { position:absolute; }
+
+.crystal {
+    border-radius:5px;
+    background: rgba(255,255,255,0.5);
+    box-shadow:0 0 20px rgba(255,255,255,0.8);
+    animation: floatCrystals linear infinite;
+}
+@keyframes floatCrystals {
+    0% { transform: translateY(0) rotate(0deg); opacity:0.3; }
+    50% { transform: translateY(-40px) rotate(180deg); opacity:1; }
+    100% { transform: translateY(0) rotate(360deg); opacity:0.3; }
+}
+
+.book {
+    width:40px;
+    height:50px;
+    background:#ffebc5;
+    border:2px solid #fff;
+    border-radius:5px;
+    box-shadow:0 0 15px rgba(255,255,255,0.6);
+    transform-origin:center;
+    animation: floatBook linear infinite;
+}
+@keyframes floatBook {
+    0% { transform:translateY(0) rotateZ(0deg); }
+    50% { transform:translateY(-60px) rotateZ(15deg); }
+    100% { transform:translateY(0) rotateZ(0deg); }
+}
+
+.particle { width:3px; height:3px; background:white; border-radius:50%; opacity:0.8; animation:twinkle 3s infinite; }
+@keyframes twinkle {
+    0%,100% { opacity:0.7; transform:scale(1); }
+    50% { opacity:0; transform:scale(0.5); }
+}
+
+/* ===== Main Page ===== */
+#main-page {
+    display:none;
+    position:relative;
+    width:100%;
+    height:100vh;
+    overflow:hidden;
+    background:linear-gradient(135deg,#1a0a2a,#3b0b44);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    transition:opacity 1s;
+}
+
+#main-page h1 {
+    color:white;
+    margin-bottom:40px;
+    font-size:3rem;
+    text-shadow:0 0 20px #ff6b81;
+    z-index:1;
+    text-align:center;
+}
+
+.option-container {
+    display:flex;
+    gap:40px;
+    flex-wrap:wrap;
+    justify-content:center;
+    z-index:1;
+    padding:0 10px;
+}
+
+.option-card {
+    position:relative;
+    width:200px;
+    height:220px;
+    background:rgba(255,255,255,0.05);
+    border:1px solid rgba(255,255,255,0.2);
+    border-radius:15px;
+    backdrop-filter:blur(10px);
+    color:white;
+    text-align:center;
+    padding:20px;
+    cursor:pointer;
+    box-shadow:0 0 15px rgba(255,255,255,0.1);
+    transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
+}
+
+.option-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow:0 0 40px rgba(255,110,145,0.6);
+    background:rgba(255,255,255,0.1);
+}
+
+.option-card h2 { margin-bottom:10px; font-size:1.5rem; color:#ff6b81; }
+.option-card p { font-size:0.9rem; color:#f0d6f7; }
+
+/* ===== Signup Button ===== */
+#signup-btn {
+position: fixed;
+top: 20px;
+right: 20px;
+padding: 12px 30px;
+font-size: 1rem;
+border: none;
+border-radius: 25px;
+background: linear-gradient(45deg,#ff6b81,#ffb6b9);
+color: white;
+cursor: pointer;
+box-shadow: 0 0 20px rgba(255,107,129,0.8);
+transition: transform 0.3s, box-shadow 0.3s;
+z-index: 1000;
+}
+
+#signup-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 35px rgba(255,107,129,1);
+}
+
+canvas#mainParticles { position:absolute; top:0; left:0; width:100%; height:100%; z-index:0; }
+
+/* Cursor Trail */
+.cursor-trail {
+    position:absolute;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    background: #ffb6b9;
+    pointer-events:none;
+    opacity:0.8;
+    z-index:1000;
+    mix-blend-mode:screen;
+}
+</style>
+</head>
+<body>
+
+<!-- Welcome Page -->
+<div id="welcome-page">
+    <h1>Welcome to the Crystal Book World</h1>
+    <button id="start-btn">Start</button>
+</div>
+
+<!-- Main Page -->
+<div id="main-page">
+    <h1>Explore Your Book World</h1>
+    <div class="option-container">
+        <div class="option-card" data-action="continue-reading">
+            <h2>Continue Reading</h2><p>Pick up where you left off</p>
+        </div>
+        <div class="option-card" data-action="reading-part">
+            <h2>Reading Part</h2><p>Dive into chapters</p>
+        </div>
+        <div class="option-card" data-action="buy-hardcover">
+            <h2>Buy Hardcover</h2><p>Get the premium edition</p>
+        </div>
+        <div class="option-card" data-action="buy-paperback">
+            <h2>Buy Paperback</h2><p>Get the regular edition</p>
+        </div>
+    </div>
+    <button id="signup-btn">Sign Up</button>
+    <canvas id="mainParticles"></canvas>
+</div>
+
+<script>
+// ===== Start Button =====
+const startBtn = document.getElementById('start-btn');
+const welcomePage = document.getElementById('welcome-page');
+const mainPage = document.getElementById('main-page');
+
+startBtn.addEventListener('click', () => {
+    welcomePage.style.opacity=0;
+    setTimeout(()=>{
+        welcomePage.style.display='none';
+        mainPage.style.display='flex';
+        mainPage.style.opacity=1;
+    },1000);
+});
+
+// ===== Welcome Page Crystals & Particles =====
+const crystals=[], books=[];
+for(let i=0;i<25;i++){
+    const c=document.createElement('div'); c.classList.add('crystal'); c.style.top=Math.random()*100+'%'; c.style.left=Math.random()*100+'%';
+    c.style.width=10+Math.random()*20+'px'; c.style.height=20+Math.random()*50+'px';
+    c.style.animationDuration=4+Math.random()*6+'s'; welcomePage.appendChild(c); crystals.push(c);
+}
+for(let i=0;i<10;i++){
+    const b=document.createElement('div'); b.classList.add('book'); b.style.top=Math.random()*100+'%'; b.style.left=Math.random()*100+'%';
+    b.style.animationDuration=5+Math.random()*7+'s'; welcomePage.appendChild(b); books.push(b);
+}
+for(let i=0;i<60;i++){
+    const p=document.createElement('div'); p.classList.add('particle'); p.style.top=Math.random()*100+'%'; p.style.left=Math.random()*100+'%';
+    p.style.animationDuration=2 + Math.random()*2 + 's'; welcomePage.appendChild(p);
+}
+
+// Parallax
+document.addEventListener('mousemove', e=>{
+    const mouseX=e.clientX/window.innerWidth-0.5, mouseY=e.clientY/window.innerHeight-0.5;
+    crystals.forEach((c,i)=>{const s=(i+1)/20; c.style.transform=`translate(${mouseX*40*s}px,${mouseY*40*s}px)`;});
+    books.forEach((b,i)=>{const s=(i+1)/30; b.style.transform=`translate(${mouseX*50*s}px,${mouseY*50*s}px) rotate(${mouseX*30*s}deg)`;});
+});
+
+// ===== Main Page Particle Background =====
+const canvas=document.getElementById('mainParticles'); 
+const ctx=canvas.getContext('2d'); 
+canvas.width=window.innerWidth; canvas.height=window.innerHeight;
+const particles=[]; 
+for(let i=0;i<80;i++){
+    particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,radius:Math.random()*2+1,speedX:(Math.random()-0.5)*0.5,speedY:(Math.random()-0.5)*0.5,color:`rgba(255,255,255,${Math.random()*0.5+0.2})`});
+}
+function animateParticles(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    particles.forEach(p=>{
+        p.x+=p.speedX; p.y+=p.speedY;
+        if(p.x<0)p.x=canvas.width; if(p.x>canvas.width)p.x=0;
+        if(p.y<0)p.y=canvas.height; if(p.y>canvas.height)p.y=0;
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.radius,0,Math.PI*2);
+        ctx.fillStyle=p.color; ctx.fill();
+    });
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth; canvas.height=window.innerHeight;});
+
+// ===== Cursor Trail =====
+const trails=[]; 
+for(let i=0;i<30;i++){
+    const div=document.createElement('div'); div.classList.add('cursor-trail'); document.body.appendChild(div); 
+    trails.push({el:div});
+}
+document.addEventListener('mousemove',e=>{
+    trails.forEach((t,i)=>{setTimeout(()=>{t.el.style.left=e.clientX+'px'; t.el.style.top=e.clientY+'px';},i*10);});
+});
+
+// ===== Book Card Logic =====
+const optionCards=document.querySelectorAll('.option-card');
+optionCards.forEach(card=>{
+    card.addEventListener('click',()=>{
+        const action=card.getAttribute('data-action');
+        const currentUser=JSON.parse(localStorage.getItem("currentUser"));
+
+        if(!currentUser && (action.includes('buy'))){
+            alert("Please log in to buy books!");
+            return;
+        }
+
+        if(action==='continue-reading'){
+            alert("You can read but cannot resume from last position!");
+        } else if(action==='reading-part'){
+            alert("You can view the reading part!");
+        } else if(action==='buy-hardcover'){
+            alert("Viewing Hardcover Book! (Login required to buy)");
+        } else if(action==='buy-paperback'){
+            alert("Viewing Paperback Book! (Login required to buy)");
+        }
+    });
+});
+
+// ===== Signup Button =====
+document.getElementById('signup-btn').addEventListener('click',()=>{
+    window.location.href='signup.html';
+});
+</script>
+</body>
+</html>
